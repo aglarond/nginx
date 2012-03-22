@@ -7,13 +7,14 @@ version           "0.100.2"
 recipe "nginx", "Installs nginx package and sets up configuration with Debian apache style with sites-enabled/sites-available"
 recipe "nginx::source", "Installs nginx from source and sets up configuration with Debian apache style with sites-enabled/sites-available"
 
-%w{ ubuntu debian centos redhat fedora }.each do |os|
+%w{ ubuntu debian centos redhat fedora freebsd }.each do |os|
   supports os
 end
 
-%w{ build-essential runit bluepill }.each do |cb|
-  depends cb
-end
+# moved to recipes/source.rb so that freebsd can be supported directly
+#%w{ build-essential runit bluepill }.each do |cb|
+#  depends cb
+#end
 
 attribute "nginx/dir",
   :display_name => "Nginx Directory",
@@ -34,6 +35,21 @@ attribute "nginx/binary",
   :display_name => "Nginx Binary",
   :description => "Location of the nginx server binary",
   :default => "/usr/sbin/nginx"
+
+attribute "nginx/init_style",
+  :display_name => "Nginx Init Style",
+  :description => "Preferred init scripts style on this platform",
+  :default => "init"
+
+attribute "nginx/default_root",
+  :display_name => "Nginx Default Root",
+  :description => "Directory for default nginx webroot",
+  :default => "/usr/sbin"
+
+attribute "nginx/sbin_path",
+  :display_name => "Nginx Sbin Path",
+  :description => "Platform-specific path to the sbin directory",
+  :default => "/usr/sbin"
 
 attribute "nginx/gzip",
   :display_name => "Nginx Gzip",
@@ -59,7 +75,7 @@ attribute "nginx/gzip_types",
   :display_name => "Nginx Gzip Types",
   :description => "Supported MIME-types for gzip",
   :type => "array",
-  :default => [ "text/plain", "text/html", "text/css", "application/x-javascript", "text/xml", "application/xml", "application/xml+rss", "text/javascript" ]
+  :default => [ "text/plain", "text/html", "text/css", "application/x-javascript", "text/xml", "application/xml", "application/xml+rss", "text/javascript", "application/javascript", "application/json" ]
 
 attribute "nginx/keepalive",
   :display_name => "Nginx Keepalive",
@@ -79,6 +95,10 @@ attribute "nginx/worker_connections",
   :display_name => "Nginx Worker Connections",
   :description => "Number of connections per worker",
   :default => "1024"
+
+attribute "nginx/server_names_hash_max_size",
+  :display_name => "Nginx Server Names Hash Max Size",
+  :default => "512"
 
 attribute "nginx/server_names_hash_bucket_size",
   :display_name => "Nginx Server Names Hash Bucket Size",

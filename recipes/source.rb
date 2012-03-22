@@ -20,6 +20,15 @@
 # limitations under the License.
 #
 
+if platform == "freebsd"
+  echo "Use the ports system for a source-build on FreeBSD"
+  exit 1
+end
+
+%w{ build-essential runit bluepill }.each do |cb|
+  depends cb
+end
+
 include_recipe "build-essential"
 
 packages = value_for_platform(

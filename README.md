@@ -17,6 +17,8 @@ Platform
 
 Debian or Ubuntu though may work where 'build-essential' works, but other platforms are untested.
 
+Using FreeBSD requires commenting-out the cb-depends in the metadata.rb file.  This block has been moved to the source.rb recipe file.
+
 Attributes
 ==========
 
@@ -32,7 +34,8 @@ All node attributes are set under the `nginx` namespace.
 * `keepalive_timeout` - set the keepalive timeout.
 * `worker_processes` - number of workers to spawn.
 * `worker_connections` - number of connections per worker.
-* `server_names_hash_bucket_size`
+* `server_names_hash_max_size` - see http://wiki.nginx.org/Optimizations
+* `server_names_hash_bucket_size`- see http://wiki.nginx.org/Optimizations
 * `url` - URL where to download the nginx source tarball
 
 The following attributes are set at the 'normal' node level via the `nginx::source` recipe.

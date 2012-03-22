@@ -18,20 +18,27 @@
 # limitations under the License.
 #
 
+root_group = value_for_platform(
+  "freebsd" => {
+   "default" => "wheel"
+  },
+  "default" => "root"
+)
+
 package "nginx"
 
 directory node[:nginx][:log_dir] do
-  mode 0755
+  mode "0755"
   owner node[:nginx][:user]
   action :create
 end
 
 %w{nxensite nxdissite}.each do |nxscript|
-  template "/usr/sbin/#{nxscript}" do
+  template "#{node[:nginx][:sbin_path]}/#{nxscript}" do
     source "#{nxscript}.erb"
-    mode 0755
+    mode "0755"
     owner "root"
-    group "root"
+    group root_group
   end
 end
 
@@ -39,15 +46,15 @@ template "nginx.conf" do
   path "#{node[:nginx][:dir]}/nginx.conf"
   source "nginx.conf.erb"
   owner "root"
-  group "root"
-  mode 0644
+  group root_group
+  mode "0644"
   notifies :reload, "service[nginx]"
 end
 
 template "#{node[:nginx][:dir]}/sites-available/default" do
   source "default-site.erb"
   owner "root"
-  group "root"
+  group root_group
   mode 0644
 end
 

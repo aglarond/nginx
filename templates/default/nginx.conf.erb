@@ -16,7 +16,7 @@ http {
   default_type  application/octet-stream;
 
   <% unless node[:nginx][:disable_access_log] -%>
-  access_log	<%= node[:nginx][:log_dir] %>/access.log;
+  access_log  <%= node[:nginx][:log_dir] %>/access.log;
   <% end %>
 
   sendfile on;
@@ -35,6 +35,7 @@ http {
   gzip_types <%= node[:nginx][:gzip_types].join(' ') %>;
   <% end %>
 
+  server_names_hash_max_size <%= node[:nginx][:server_names_hash_max_size] %>;
   server_names_hash_bucket_size <%= node[:nginx][:server_names_hash_bucket_size] %>;
 
   include <%= node[:nginx][:dir] %>/conf.d/*.conf;
